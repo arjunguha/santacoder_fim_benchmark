@@ -70,7 +70,11 @@ def _fim_decode_spmv2(generation: str, prefix: str) -> str:
     """
     assert generation.startswith(FIM_PREFIX + FIM_SUFFIX)
     middle_index = generation.index(FIM_MIDDLE)
-    assert generation[middle_index + len(FIM_MIDDLE) : len(prefix)] == prefix
+    # This is just a sanity check.
+    prefix_start = middle_index + len(FIM_MIDDLE)
+    prefix_end = prefix_start + len(prefix)
+    extracted_prefix = generation[prefix_start:prefix_end]
+    assert extracted_prefix == prefix, f"SPMv2 error: {extracted_prefix} != {prefix}"
     return generation[middle_index + len(FIM_MIDDLE) + len(prefix) :]
 
 
