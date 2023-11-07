@@ -25,6 +25,7 @@ FIM_PREFIX = "<fim_prefix>"
 FIM_MIDDLE = "<fim_middle>"
 FIM_SUFFIX = "<fim_suffix>"
 FIM_PAD = "<fim_pad>"
+FILENAME_TOKEN = "<filename>"
 EOD = "<|endoftext|>"
 
 GENERATION_ARGS = {
@@ -92,11 +93,10 @@ def _fim_decode(mode: str, prefix: str, generation: str) -> str:
         generation = _fim_decode_spmv2(generation, prefix)
     else:
         raise ValueError(f"Unknown mode {mode}")
-    # Remove all the right-padding.
-    try:
-        right_pad_index = generation.index(EOD)
-    except ValueError:
-        right_pad_index = len(generation)
+    # Find the first index in generation where either <|endoftext|> or
+    # <|filename|> appears. Use a regex.
+    m = re.search(f"({re.escape(EOD)}|{re.escape(FILENAME_TOKEN)})", generation)
+    right_pad_index = m.start() if m else len(generation)
     return generation[:right_pad_index]
 
 
