@@ -41,6 +41,8 @@ LEFT_PADDING_TEXT = re.compile("^(" + re.escape(EOD) + ")*")
 def _fim_encode(mode: str, prefix: str, suffix: str) -> str:
     if mode == "PSM":
         return f"{FIM_PREFIX}{prefix}{FIM_SUFFIX}{suffix}{FIM_MIDDLE}"
+    elif mode == "PSMrepo":
+        return f"{FIM_PREFIX}<reponame>jscarberry/pots<filename>test.py\n{prefix}{FIM_SUFFIX}{suffix}{FIM_MIDDLE}"
     elif mode == "SPMv2":
         # StarCoder and StarCoder 2 use SPMv2 and _not_ SPM.
         return f"{FIM_PREFIX}{FIM_SUFFIX}{suffix}{FIM_MIDDLE}{prefix}"
@@ -84,7 +86,7 @@ def _fim_decode(mode: str, prefix: str, generation: str) -> str:
     """
     # Remove all the left-padding.
     generation = re.sub(LEFT_PADDING_TEXT, "", generation)
-    if mode == "PSM":
+    if mode == "PSM" or mode == "PSMrepo":
         generation = _fim_decode_psm(generation)
     elif mode == "SPMv2":
         generation = _fim_decode_spmv2(generation, prefix)
