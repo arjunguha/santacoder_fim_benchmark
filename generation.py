@@ -146,7 +146,7 @@ def main():
         help="Output directory for results",
     )
     parser.add_argument(
-        "--mode", choices=["SPMv2", "PSM"], required=True, help="Mode to use"
+        "--mode", choices=["SPMv2", "PSM", "PSMrepo"], required=True, help="Mode to use"
     )
 
     args = parser.parse_args()
